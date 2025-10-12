@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.20"
     java
     application
+    id("me.champeau.jmh") version "0.7.2"
 }
 
 group = "org.itmo"
@@ -21,10 +22,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-kotlin {
-    jvmToolchain(8)
-}
-
 application {
     mainClass.set("MainKt")
 }
@@ -42,5 +39,14 @@ tasks.register<JavaExec>("jcstress") {
     if (!argsProp.isNullOrBlank()) {
         args = argsProp.split("\\s+".toRegex())
     }
+}
+
+// JMH configuration for benchmarks
+// Use: ./gradlew jmh -Pjmh.include=org.itmo.BFSBenchmark
+jmh {
+    warmupIterations.set(3)
+    iterations.set(5)
+    fork.set(1)
+    timeOnIteration.set("1s")
 }
 

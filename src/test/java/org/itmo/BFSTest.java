@@ -1,14 +1,10 @@
 package org.itmo;
 
-import org.junit.jupiter.api.Test;
-
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.function.BiFunction;
-import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.Test;
 
 public class BFSTest {
 
@@ -24,29 +20,28 @@ public class BFSTest {
                 Graph g = new RandomGraphGenerator().generateGraph(r, sizes[i], connections[i]);
                 System.out.println("Generation completed!\nStarting bfs");
                 long serialTime = executeSerialBfsAndGetTime(g);
-                long parallelTime = executeParallelBfsAndGetTime(g);
+                long parallelTimeWithLocalBatches = executeParallelBfsWithLocalBatchesAndGetTime(g);
                 fw.append("Times for " + sizes[i] + " vertices and " + connections[i] + " connections: ");
-                fw.append("\nSerial: " + serialTime);
-                fw.append("\nParallel: " + parallelTime);
+                fw.append("\nSerial:                      " + serialTime);
+                fw.append("\nParallel with local batches: " + parallelTimeWithLocalBatches);
                 fw.append("\n--------\n");
             }
             fw.flush();
         }
     }
 
-
     private long executeSerialBfsAndGetTime(Graph g) {
+        return executeAndGetTime(() -> g.bfs(0));
+    }
+
+    private long executeParallelBfsWithLocalBatchesAndGetTime(Graph g) {
+        return executeAndGetTime(() -> g.parallelBFSWithLocalBatches(0));
+    }
+
+    private long executeAndGetTime(Runnable r) {
         long startTime = System.currentTimeMillis();
-        g.bfs(0);
+        r.run();
         long endTime = System.currentTimeMillis();
         return endTime - startTime;
     }
-
-    private long executeParallelBfsAndGetTime(Graph g) {
-        long startTime = System.currentTimeMillis();
-        g.parallelBFS(0);
-        long endTime = System.currentTimeMillis();
-        return endTime - startTime;
-    }
-
 }
