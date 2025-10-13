@@ -1,0 +1,4 @@
+Benchmark                               (size)  Mode  Cnt    Score    Error  Units
+BFSSerialBenchmark.benchmarkSerialBfs    50000  avgt    5    2.543 ±  0.542  ms/op
+BFSSerialBenchmark.benchmarkSerialBfs   100000  avgt    5   10.131 ± 10.439  ms/op
+BFSSerialBenchmark.benchmarkSerialBfs  1000000  avgt    5  242.270 ± 92.670  ms/op
